@@ -1,10 +1,14 @@
-﻿using bank_api.Models;
+﻿using bank_api.Dtos.Client;
+using bank_api.Models;
 
 public interface IClienteRepository
 {
     IEnumerable<Client> GetAll();
     Client GetByCpf(string cpf);
+    Client GetId(long id);
     void Add(Client cliente);
+    void Update(Client clienteDto);
+    void Delete(long id);
 }
 
 public class ClienteRepository : IClienteRepository
@@ -24,5 +28,22 @@ public class ClienteRepository : IClienteRepository
     {
         _context.Clients.Add(cliente);
         _context.SaveChanges();
+    }
+
+    public Client GetId(long id)
+    {
+        return _context.Clients.FirstOrDefault(c => c.Id ==id);
+    }
+
+    public void Update(Client cliente)
+    {
+        _context.Clients.Update(cliente);
+        _context.SaveChanges();
+    }
+
+    public void Delete(long id)
+    {
+        var client = _context.Clients.FirstOrDefault(x => x.Id == id);
+        _context.Clients.Remove(client);
     }
 }

@@ -1,10 +1,9 @@
-﻿using bank_api.Dtos;
+﻿using bank_api.Dtos.Client;
 using bank_api.Models;
-using System.Collections.Generic;
 
 public class ClienteService
 {
-    private readonly IClienteRepository _clienteRepository;
+    private IClienteRepository _clienteRepository;
 
     public ClienteService(IClienteRepository clienteRepository)
     {
@@ -23,7 +22,7 @@ public class ClienteService
         });
     }
 
-    public string AddCliente(ClienteDTO clienteDto)
+    public string AddCliente(CreateClientRequest clienteDto)
     {
         if (_clienteRepository.GetByCpf(clienteDto.Document) != null)
         {
@@ -39,5 +38,29 @@ public class ClienteService
 
         _clienteRepository.Add(client);
         return "Cliente cadastrado com sucesso!";
+    }
+
+    public Client? GetClient(long clientId)
+    {
+        return _clienteRepository.GetId(clientId);
+    }
+
+    public string? UpdateClient(UpdateClientRequest clienteDto)
+    {
+        var client = new Client
+        {
+            Id = clienteDto.Id,
+            Name = clienteDto.Name,
+            Document = clienteDto.Document,
+            Phone = clienteDto.Phone
+        };
+        _clienteRepository.Update(client);
+
+        return "Cliente atualizado com sucesso!";
+    }
+
+    public void DeleteClient(long id)
+    {
+        _clienteRepository.Delete(id);
     }
 }
