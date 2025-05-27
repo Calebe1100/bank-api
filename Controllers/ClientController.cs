@@ -1,5 +1,10 @@
 using bank_api.Dtos.Client;
+using bank_api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -50,4 +55,33 @@ public class ClientController : ControllerBase
         _clienteService.DeleteClient(id);
         return NoContent();
     }
+
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginModel model)
+    {
+        if (model.Username == "admin" && model.Password == "123")
+        {
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, model.Username),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("knab"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "bank-issuer",
+                audience: "bank-audience",
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: creds
+            );
+
+            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        }
+
+        return Unauthorized();
+    }
+
 }
