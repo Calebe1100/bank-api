@@ -1,6 +1,6 @@
 ﻿namespace bank_api.Models
 {
-    public class Release
+    public class Transaction
     {
         public int Id { get; set; }
         public int IdAccount { get; set; }

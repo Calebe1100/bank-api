@@ -1,3 +1,4 @@
+using bank_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,8 +22,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 36))));
 
 // Configuração das dependências
+
+//repositories
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+
+
+//services
 builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<AccountService>();
 
 // Configuração do controlador
 builder.Services.AddControllers();

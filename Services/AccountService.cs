@@ -17,7 +17,6 @@ namespace bank_api.Services
             var accounts = _accountRepository.GetByClient(idClient);
             return accounts.Select(c => new AccountDTO
             {
-                Id = c.Id,
                 IdClient = c.IdClient,
                 Number = c.Number,
             });

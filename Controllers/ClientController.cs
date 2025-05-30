@@ -93,7 +93,7 @@ public class ClientController : ControllerBase
             signingCredentials: creds
         );
 
-        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token),  name = usuario.Name, idClient = usuario.Id });
     }
 
 

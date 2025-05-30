@@ -1,6 +1,6 @@
 ﻿namespace bank_api.Repositories
 {
-    public class ReleaseRepository
+    public class TransactionRepository
     {
     }
 }
