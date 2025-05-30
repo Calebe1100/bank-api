@@ -1,10 +1,8 @@
 ﻿namespace bank_api.Dtos.Client
 {
-    public class CreateClientRequest
+    public class LoginRequest
     {
-        public string Name { get; set; }
         public string Document { get; set; }
-        public string Phone { get; set; }
         public string Password { get; set; }
     }
 }

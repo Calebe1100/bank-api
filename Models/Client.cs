@@ -7,6 +7,7 @@ namespace bank_api.Models
     {
         [Key]
         [Column("id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
         [Required]
@@ -21,5 +22,6 @@ namespace bank_api.Models
         [Required]
         [Column("phone")]
         public string Phone { get; set; }
+        public string PasswordHash { get; internal set; }
     }
 }

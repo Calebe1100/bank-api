@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api")]
 public class ClientController : ControllerBase
 {
     private readonly ClienteService _clienteService;
@@ -17,13 +17,13 @@ public class ClientController : ControllerBase
         _clienteService = clienteService;
     }
 
-    [HttpGet]
+    [HttpGet("clients")]
     public ActionResult<IEnumerable<ClienteDTO>> GetClients()
     {
         return Ok(_clienteService.GetClientes());
     }
 
-    [HttpPost]
+    [HttpPost("clients")]
     public ActionResult<string> CreateClient([FromBody] CreateClientRequest clienteDto)
     {
         var resultado = _clienteService.AddCliente(clienteDto);
@@ -57,31 +57,44 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginModel model)
+    public IActionResult Login([FromBody] LoginRequest model)
     {
-        if (model.Username == "admin" && model.Password == "123")
+        // Buscar usuário no banco de dados
+        var usuario = _clienteService.GetByDocument(model.Document);
+
+        if (usuario == null)
         {
-            var claims = new[]
-            {
-            new Claim(JwtRegisteredClaimNames.Sub, model.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("knab"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: "bank-issuer",
-                audience: "bank-audience",
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds
-            );
-
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Unauthorized(); // Usuário não encontrado
         }
 
-        return Unauthorized();
+        // Validar senha
+        bool senhaValida = BCrypt.Net.BCrypt.Verify(model.Password, usuario.PasswordHash);
+
+        if (!senhaValida)
+        {
+            return Unauthorized(); // Senha inválida
+        }
+
+        // Criar claims para JWT
+        var claims = new[]
+        {
+        new Claim(JwtRegisteredClaimNames.Sub, model.Document),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uma_chave_muito_mais_segura_e_longa_123!"));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: "bank-issuer",
+            audience: "bank-audience",
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: creds
+        );
+
+        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
     }
+
 
 }

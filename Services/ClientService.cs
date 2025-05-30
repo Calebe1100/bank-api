@@ -1,4 +1,5 @@
-﻿using bank_api.Dtos.Client;
+﻿using bank_api.Dtos.Accounts;
+using bank_api.Dtos.Client;
 using bank_api.Models;
 
 public class ClienteService
@@ -29,11 +30,15 @@ public class ClienteService
             return "CPF já cadastrado.";
         }
 
+        string senhaHash = BCrypt.Net.BCrypt.HashPassword(clienteDto.Password);
+
+
         var client = new Client
         {
             Name = clienteDto.Name,
             Document = clienteDto.Document,
-            Phone = clienteDto.Phone
+            Phone = clienteDto.Phone,
+            PasswordHash = senhaHash // Salvando a senha criptografada
         };
 
         _clienteRepository.Add(client);
@@ -43,6 +48,11 @@ public class ClienteService
     public Client? GetClient(long clientId)
     {
         return _clienteRepository.GetId(clientId);
+    }
+
+    public Client? GetByDocument(string document)
+    {
+        return _clienteRepository.GetByDocument(document);
     }
 
     public string? UpdateClient(UpdateClientRequest clienteDto)
