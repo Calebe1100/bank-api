@@ -1,4 +1,6 @@
-﻿namespace bank_api.Models
+﻿using bank_api.Enums;
+
+namespace bank_api.Models
 {
     public class Transaction
     {

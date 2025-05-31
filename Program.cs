@@ -1,3 +1,4 @@
+using bank_api.Repositories;
 using bank_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //repositories
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 
 
 //services
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<TransactionService>();
 
 // Configuração do controlador
 builder.Services.AddControllers();

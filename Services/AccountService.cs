@@ -19,6 +19,7 @@ namespace bank_api.Services
             {
                 IdClient = c.IdClient,
                 Number = c.Number,
+                Id = c.Id,
             });
         }
 
@@ -62,5 +63,10 @@ namespace bank_api.Services
             _accountRepository.Delete(idClient, id);
         }
 
+
+        internal Account GetAccountByNumber(int idClient, string number)
+        {
+            return _accountRepository.GetNumber(idClient, number);
+        }
     }
 }

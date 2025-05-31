@@ -8,6 +8,7 @@ public interface IAccountRepository
     void Add(Account account);
     void Update(Account accountDto);
     void Delete(long idClient, long id);
+    Account GetNumber(int idClient, string number);
 }
 
 public class AccountRepository : IAccountRepository
@@ -44,5 +45,10 @@ public class AccountRepository : IAccountRepository
     {
         var client = _context.Accounts.FirstOrDefault(x => x.IdClient == idClient && x.Id == id);
         _context.Accounts.Remove(client);
+    }
+
+    public Account GetNumber(int idClient, string number)
+    {
+        return _context.Accounts.FirstOrDefault(c => c.IdClient == idClient && c.Number == number);
     }
 }
