@@ -21,7 +21,7 @@ public class ClienteRepository : IClienteRepository
         _context = context;
     }
 
-    public IEnumerable<Client> GetAll() => _context.Clients.ToList();
+    public IEnumerable<Client>  GetAll() => _context.Clients.ToList();
 
     public Client GetByCpf(string cpf) => _context.Clients.FirstOrDefault(c => c.Document == cpf);
 

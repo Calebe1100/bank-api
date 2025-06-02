@@ -47,7 +47,28 @@ namespace bank_api.Services
 
         internal object? AddWithDraws(int idClient, int idAccount, CreateTransactionRequest transactionDto)
         {
-            throw new NotImplementedException();
+            if (this.clienteService.GetClient(idClient) == null)
+            {
+                return "Cliente não cadastrado.";
+            }
+
+            var account = this.accountService.GetAccountByNumber(idClient, idAccount.ToString());
+
+            if (account == null)
+            {
+                return "Conta não cadastrado.";
+            }
+
+            var deposit = new Transaction
+            {
+                IdAccount = account.Id,
+                Value = transactionDto.Value,
+                Type = (short)Enums.TransactionEnum.WithDraw
+            };
+
+            transactionRepository.AddDeposit(deposit);
+            return "Deposito cadastrado com sucesso!";
+
         }
 
         internal IEnumerable<TransactionDTO> GetTransactions(int idClient, int idAccount)

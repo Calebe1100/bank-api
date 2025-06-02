@@ -1,5 +1,6 @@
 using bank_api.Dtos.Client;
 using bank_api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +9,7 @@ using System.Text;
 
 [ApiController]
 [Route("api")]
+[Authorize]
 public class ClientController : ControllerBase
 {
     private readonly ClienteService _clienteService;
@@ -57,6 +59,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public IActionResult Login([FromBody] LoginRequest model)
     {
         // Buscar usuário no banco de dados

@@ -1,11 +1,13 @@
 ﻿using bank_api.Dtos.Accounts;
 using bank_api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bank_api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly AccountService _accountService;
