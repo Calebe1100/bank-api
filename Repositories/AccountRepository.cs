@@ -1,13 +1,15 @@
 ﻿using bank_api.Models;
+using Microsoft.EntityFrameworkCore;
 
 public interface IAccountRepository
 {
-    IEnumerable<Account> GetByClient(int idClient);
+    Task<IEnumerable<Account>> GetByClient(int idClient);
     Account GetByNumber(string cpf);
     Account GetId(int idClient, long id);
     void Add(Account account);
     void Update(Account accountDto);
     void Delete(long idClient, long id);
+    bool ExistsByNumber(string accountNumber);
     Account GetNumber(int idClient, string number);
 }
 
@@ -20,7 +22,12 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
-    public IEnumerable<Account> GetByClient(int idClient) => _context.Accounts.Where( c => c.IdClient == idClient);
+    public async Task<IEnumerable<Account>> GetByClient(int idClient)
+    {
+        return await _context.Accounts
+                             .Where(c => c.IdClient == idClient)
+                             .ToListAsync();
+    }
 
     public Account GetByNumber(string number) => _context.Accounts.FirstOrDefault(c => c.Number == number);
 
@@ -51,4 +58,10 @@ public class AccountRepository : IAccountRepository
     {
         return _context.Accounts.FirstOrDefault(c => c.IdClient == idClient && c.Number == number);
     }
+
+    public bool ExistsByNumber(string accountNumber)
+    {
+        return _context.Accounts.Any(a => a.Number == accountNumber);
+    }
+
 }

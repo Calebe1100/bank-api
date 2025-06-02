@@ -2,8 +2,12 @@
 {
     public class AccountDTO
     {
-        public object Id { get; internal set; }
-        public object IdClient { get; internal set; }
-        public object Number { get; internal set; }
+        public int Id { get; internal set; }
+        public int IdClient { get; internal set; }
+        public string Number { get; internal set; }
+
+        //Campo calculado, valor da conta
+        public double Value { get; set; }
+
     }
 }

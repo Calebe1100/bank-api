@@ -11,13 +11,13 @@ namespace bank_api.Services
     {
         ITransactionRepository transactionRepository;
         ClienteService clienteService;
-        AccountService accountService;
+        IAccountRepository accountRepository;
 
-        public TransactionService(ITransactionRepository transactionRepository, ClienteService clienteService, AccountService accountService)
+        public TransactionService(ITransactionRepository transactionRepository, ClienteService clienteService, IAccountRepository accountRepository)
         {
             this.transactionRepository = transactionRepository;
             this.clienteService = clienteService;
-            this.accountService = accountService;
+            this.accountRepository = accountRepository;
         }
 
         internal string AddDeposit(int idClient, int idAccount, CreateTransactionRequest transactionDto)
@@ -27,7 +27,7 @@ namespace bank_api.Services
                 return "Cliente não cadastrado.";
             }
 
-            var account = this.accountService.GetAccountByNumber(idClient, idAccount.ToString());
+            var account = this.accountRepository.GetNumber(idClient, idAccount.ToString());
 
             if (account == null)
             {
@@ -52,7 +52,7 @@ namespace bank_api.Services
                 return "Cliente não cadastrado.";
             }
 
-            var account = this.accountService.GetAccountByNumber(idClient, idAccount.ToString());
+            var account = this.accountRepository.GetNumber(idClient, idAccount.ToString());
 
             if (account == null)
             {

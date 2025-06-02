@@ -18,9 +18,9 @@ namespace bank_api.Controllers
         }
 
         [HttpGet("clients/{idClient}/accounts")]
-        public ActionResult<IEnumerable<AccountDTO>> GetAccounts([FromRoute] int idClient)
+        public async Task<ActionResult<IEnumerable<AccountDTO>>> GetAccounts([FromRoute] int idClient)
         {
-            return Ok(_accountService.GetAccounts(idClient));
+            return  Ok(await _accountService.GetAccounts(idClient));
         }
 
         [HttpPost("clients/{idClient}/accounts")]

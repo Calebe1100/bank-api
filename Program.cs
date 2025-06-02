@@ -30,13 +30,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // ============================
 // 3. Repositories & Services
 // ============================
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 
-builder.Services.AddScoped<ClienteService>();
-builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<TransactionService>();
+builder.Services.AddTransient<ClienteService>();
+builder.Services.AddTransient<AccountService>();
+builder.Services.AddTransient<TransactionService>();
 
 builder.Services.AddControllers();
 
@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
 
             ValidIssuer = "bank-issuer",

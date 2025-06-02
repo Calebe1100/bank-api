@@ -3,6 +3,5 @@
     public class CreateAccountRequest
     {
         public int IdClient { get; set; }
-        public string Number { get; set; }
     }
 }
