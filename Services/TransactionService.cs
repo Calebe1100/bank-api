@@ -27,7 +27,7 @@ namespace bank_api.Services
                 return "Cliente não cadastrado.";
             }
 
-            var account = this.accountRepository.GetNumber(idClient, idAccount.ToString());
+            var account = this.accountRepository.GetId(idClient, idAccount);
 
             if (account == null)
             {
@@ -57,6 +57,12 @@ namespace bank_api.Services
             if (account == null)
             {
                 return "Conta não cadastrado.";
+            }
+
+            var accountSald = GetTransactions(idClient, idAccount).Sum(x => x.Value);
+            if ( double.Abs(transactionDto.Value) > accountSald)
+            {
+                return "Saldo insulficiente.";
             }
 
             var deposit = new Transaction

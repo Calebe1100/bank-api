@@ -31,7 +31,7 @@ namespace bank_api.Controllers
             {
                 return BadRequest(resultado);
             }
-            return CreatedAtAction(nameof(GetAccounts), resultado);
+            return CreatedAtAction(nameof(CreateAccount), resultado);
         }
 
         [HttpGet("clients/{idClient}/accounts/{id}")]

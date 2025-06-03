@@ -65,18 +65,6 @@ namespace bank_api.Services
             return _accountRepository.GetId(idClient, accountId);
         }
 
-        //public string? UpdateAccount(UpdateAccountRequest accountDto)
-        //{
-        //    var account = new Account
-        //    {
-        //        Name = accountDto.Number,
-        //        Document = accountDto.Document,
-        //        Phone = accountDto.Phone
-        //    };
-        //    _accountRepository.Update(account);
-
-        //    return "Account atualizado com sucesso!";
-        //}
 
         public void DeleteAccount(long idClient, long id)
         {
@@ -108,6 +96,18 @@ namespace bank_api.Services
 
             return $"{initials}{randomDigits}";
         }
+        //public string? UpdateAccount(UpdateAccountRequest accountDto)
+        //{
+        //    var account = new Account
+        //    {
+        //        Name = accountDto.Number,
+        //        Document = accountDto.Document,
+        //        Phone = accountDto.Phone
+        //    };
+        //    _accountRepository.Update(account);
+
+        //    return "Account atualizado com sucesso!";
+        //}
 
     }
 }

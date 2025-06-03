@@ -26,6 +26,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost("clients")]
+    [AllowAnonymous]
     public ActionResult<string> CreateClient([FromBody] CreateClientRequest clienteDto)
     {
         var resultado = _clienteService.AddCliente(clienteDto);
