@@ -1,4 +1,5 @@
 ﻿using bank_api.Dtos.Transactions;
+using bank_api.Enums;
 using bank_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,18 +27,20 @@ namespace bank_api.Controllers
         [HttpPost("clients/{idClient}/accounts/{idAccount}/transactions/deposits")]
         public ActionResult<string> CreateTransaction([FromRoute] int idClient, [FromRoute] int idAccount, [FromBody] CreateTransactionRequest transactionDto)
         {
+            transactionDto.Type = (int)TransactionEnum.Deposit;
             var resultado = _transactionService.AddDeposit(idClient, idAccount, transactionDto);
 
-            return CreatedAtAction(nameof(GetTransactions), resultado);
+            return Ok(resultado);
         }
 
 
         [HttpPost("clients/{idClient}/accounts/{idAccount}/transactions/withdraws")]
         public ActionResult<string> CreateTransactionDraws([FromRoute] int idClient, [FromRoute] int idAccount, [FromBody] CreateTransactionRequest transactionDto)
         {
+            transactionDto.Type = (int)TransactionEnum.WithDraw;
             var resultado = _transactionService.AddWithDraws(idClient, idAccount, transactionDto);
 
-            return CreatedAtAction(nameof(GetTransactions), resultado);
+            return Ok(resultado);
         }
 
 

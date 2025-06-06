@@ -52,7 +52,7 @@ namespace bank_api.Services
                 return "Cliente não cadastrado.";
             }
 
-            var account = this.accountRepository.GetNumber(idClient, idAccount.ToString());
+            var account = this.accountRepository.GetId(idClient, idAccount);
 
             if (account == null)
             {
@@ -90,7 +90,8 @@ namespace bank_api.Services
             {
                 Id = c.Id,
                 IdAccount = c.IdAccount,
-                Value = c.Value
+                Value = c.Value,
+                Type = c.Type,
             });
         }
 

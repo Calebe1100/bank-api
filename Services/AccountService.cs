@@ -1,4 +1,5 @@
 ﻿using bank_api.Dtos.Accounts;
+using bank_api.Enums;
 using bank_api.Models;
 
 namespace bank_api.Services
@@ -30,7 +31,7 @@ namespace bank_api.Services
 
         private double GetAccountValue(int idClient, Account c)
         {
-            return this.transactionService.GetTransactions(idClient, c.Id).Sum(t => t.Value);
+            return this.transactionService.GetTransactions(idClient, c.Id).Sum(t =>  t.Type == (int)TransactionEnum.Deposit ? t.Value : t.Value * -1);
         }
 
         public string AddAccount(int idClient, CreateAccountRequest accountDto)

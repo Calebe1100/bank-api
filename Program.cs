@@ -52,9 +52,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = true,
-
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,            
             ValidIssuer = "bank-issuer",
             ValidAudience = "bank-audience",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveSegura))
@@ -107,7 +106,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Clientes V1");
-    c.RoutePrefix = string.Empty; // Para abrir diretamente no `/`
+    c.RoutePrefix = "swagger"; // Para abrir diretamente no `/`
 });
 
 app.UseAuthentication(); // Antes do Authorization
