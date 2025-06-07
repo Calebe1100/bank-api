@@ -25,13 +25,29 @@ namespace bank_api.Services
                 IdClient = c.IdClient,
                 Number = c.Number,
                 Id = c.Id,
-                Value = GetAccountValue(idClient, c)
+                Value = GetAccountValue(idClient, c),
+                CreditLimit = c.CreditLimit,
+                
+            });
+        }
+
+        public async Task<IEnumerable<AccountDTO>> GetAllAccounts()
+        {
+            var accounts = await _accountRepository.GetFull();
+            return accounts.Select(c => new AccountDTO
+            {
+                IdClient = c.IdClient,
+                Number = c.Number,
+                Id = c.Id,
+                Value = 0,
+                CreditLimit = c.CreditLimit,
+
             });
         }
 
         private double GetAccountValue(int idClient, Account c)
         {
-            return this.transactionService.GetTransactions(idClient, c.Id).Sum(t =>  t.Type == (int)TransactionEnum.Deposit ? t.Value : t.Value * -1);
+            return this.transactionService.GetTransactions(idClient, c.Id).Sum(t =>  t.Type == (int)TypeEnum.Credit ? t.Value : t.Value * -1) + c.CreditLimit;
         }
 
         public string AddAccount(int idClient, CreateAccountRequest accountDto)
@@ -97,18 +113,26 @@ namespace bank_api.Services
 
             return $"{initials}{randomDigits}";
         }
-        //public string? UpdateAccount(UpdateAccountRequest accountDto)
-        //{
-        //    var account = new Account
-        //    {
-        //        Name = accountDto.Number,
-        //        Document = accountDto.Document,
-        //        Phone = accountDto.Phone
-        //    };
-        //    _accountRepository.Update(account);
+        public async  Task<string?> UpdateAccount(UpdateAccountRequest accountDto)
+        {
+            var account = this.GetAccount(accountDto.IdClient, accountDto.Id);
 
-        //    return "Account atualizado com sucesso!";
-        //}
+            if (account.CreditLimit > accountDto.CreditLimit)
+            {
+                return "Limite inferior ao limite atual";
+            }
+
+            var accountCreated = new Account
+            {
+                Id = accountDto.Id,
+                IdClient = accountDto.IdClient,
+                CreditLimit = accountDto.CreditLimit,
+                Number = account.Number
+            };
+            await _accountRepository.UpdateAsync(accountCreated);
+
+            return "Conta atualizada com sucesso!";
+        }
 
     }
 }

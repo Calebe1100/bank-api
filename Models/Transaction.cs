@@ -8,5 +8,7 @@ namespace bank_api.Models
         public int IdAccount { get; set; }
         public double Value  { get; set; }
         public short Type  { get; set; }
+        public short Operation  { get; set; }
+        public DateTime CreationDate  { get; set; }
     }
 }

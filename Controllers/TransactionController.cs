@@ -27,7 +27,7 @@ namespace bank_api.Controllers
         [HttpPost("clients/{idClient}/accounts/{idAccount}/transactions/deposits")]
         public ActionResult<string> CreateTransaction([FromRoute] int idClient, [FromRoute] int idAccount, [FromBody] CreateTransactionRequest transactionDto)
         {
-            transactionDto.Type = (int)TransactionEnum.Deposit;
+            transactionDto.Type = (int)TypeEnum.Credit;
             var resultado = _transactionService.AddDeposit(idClient, idAccount, transactionDto);
 
             return Ok(resultado);
@@ -37,7 +37,7 @@ namespace bank_api.Controllers
         [HttpPost("clients/{idClient}/accounts/{idAccount}/transactions/withdraws")]
         public ActionResult<string> CreateTransactionDraws([FromRoute] int idClient, [FromRoute] int idAccount, [FromBody] CreateTransactionRequest transactionDto)
         {
-            transactionDto.Type = (int)TransactionEnum.WithDraw;
+            transactionDto.Type = (int)TypeEnum.Debit;
             var resultado = _transactionService.AddWithDraws(idClient, idAccount, transactionDto);
 
             return Ok(resultado);

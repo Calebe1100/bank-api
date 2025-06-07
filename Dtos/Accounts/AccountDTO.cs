@@ -8,6 +8,7 @@
 
         //Campo calculado, valor da conta
         public double Value { get; set; }
+        public double CreditLimit { get; set; }
 
     }
 }

@@ -23,6 +23,12 @@ namespace bank_api.Controllers
             return  Ok(await _accountService.GetAccounts(idClient));
         }
 
+        [HttpGet("clients/{idClient}/accounts/all")]
+        public async Task<ActionResult<IEnumerable<AccountDTO>>> GetAllAccounts([FromRoute] int idClient)
+        {
+            return Ok(await _accountService.GetAllAccounts());  
+        }
+
         [HttpPost("clients/{idClient}/accounts")]
         public ActionResult<string> CreateAccount([FromRoute] int idClient, [FromBody] CreateAccountRequest accountDto)
         {
@@ -40,20 +46,15 @@ namespace bank_api.Controllers
             return Ok(_accountService.GetAccount(idClient, id));
         }
 
-        //[HttpPut("clients/{idClient}/accounts/{id}")]
-        //public ActionResult<string> UpdateAccount([FromBody] UpdateAccountRequest accountDto, [FromRoute] long id)
-        //{
-        //    accountDto.Id = id;
-        //    var resultado = _accountService.UpdateAccount(accountDto);
-
-        //    return CreatedAtAction(nameof(GetAccounts), resultado);
-        //}
-
-        [HttpDelete("clients/{idClient}/accounts/{id}")]
-        public ActionResult<string> DeleteAccount([FromRoute] int idClient, [FromRoute] long id)
+        [HttpPut("clients/{idClient}/accounts/{id}")]
+        public async Task<string> UpdateAccount([FromBody] UpdateAccountRequest accountDto,[FromRoute] int idClient, [FromRoute] int id)
         {
-            _accountService.DeleteAccount(idClient, id);
-            return NoContent();
+            accountDto.Id = id;
+            accountDto.IdClient = idClient;
+            var resultado = await _accountService.UpdateAccount(accountDto);
+
+            return  resultado;
         }
+
     }
 }
