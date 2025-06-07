@@ -8,5 +8,6 @@ namespace bank_api.Models
         public int Id { get; set; }
         public int IdClient { get; set; }
         public string Number { get; set; }
+        public double CreditLimit { get; set; }
     }
 }

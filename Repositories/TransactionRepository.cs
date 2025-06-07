@@ -26,7 +26,7 @@ namespace bank_api.Repositories
 
         public IEnumerable<Transaction> GetDeposits( int idAccount)
         {
-            return _context.Transactions.Where(c => c.IdAccount == idAccount).ToList();
+            return _context.Transactions.Where(c => c.IdAccount == idAccount).ToList().OrderByDescending(c => c.CreationDate);
         }
     }
 }

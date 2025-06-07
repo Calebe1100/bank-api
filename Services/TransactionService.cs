@@ -1,6 +1,7 @@
 ﻿
 using bank_api.Dtos.Accounts;
 using bank_api.Dtos.Transactions;
+using bank_api.Enums;
 using bank_api.Models;
 using bank_api.Repositories;
 using System.Net.Sockets;
@@ -34,15 +35,39 @@ namespace bank_api.Services
                 return "Conta não cadastrado.";
             }
 
+
+
             var deposit = new Transaction
             {
                 IdAccount = account.Id,
                 Value = transactionDto.Value,
-                Type = (short)Enums.TransactionEnum.Deposit
+                Type = (short)Enums.TypeEnum.Credit,
+                Operation = (short)OperationEnum.Deposit,
+                CreationDate = DateTime.Now,
             };
 
             transactionRepository.AddDeposit(deposit);
+
+            if (transactionDto.Value > GetAccountValue(idClient, account))
+            {
+                var tax = new Transaction
+                {
+                    IdAccount = idAccount,
+                    Value = transactionDto.Value * 0.1,
+                    Type = (short)Enums.TypeEnum.Credit,
+                    Operation = (short)OperationEnum.Bonus,
+                    CreationDate = DateTime.Now,
+                };
+
+                this.transactionRepository.AddDeposit(tax);
+            }
+
             return "Deposito cadastrado com sucesso!";
+        }
+
+        private double GetAccountValue(int idClient, Account c)
+        {
+            return this.GetTransactions(idClient, c.Id).Sum(t => t.Type == (int)TypeEnum.Credit ? t.Value : t.Value * -1);
         }
 
         internal object? AddWithDraws(int idClient, int idAccount, CreateTransactionRequest transactionDto)
@@ -59,8 +84,8 @@ namespace bank_api.Services
                 return "Conta não cadastrado.";
             }
 
-            var accountSald = GetTransactions(idClient, idAccount).Sum(x => x.Value);
-            if ( double.Abs(transactionDto.Value) > accountSald)
+            var accountSald = GetTransactions(idClient, idAccount).Sum(x => x.Value) + account.CreditLimit;
+            if (double.Abs(transactionDto.Value) > accountSald)
             {
                 return "Saldo insulficiente.";
             }
@@ -69,11 +94,13 @@ namespace bank_api.Services
             {
                 IdAccount = account.Id,
                 Value = transactionDto.Value,
-                Type = (short)Enums.TransactionEnum.WithDraw
+                Type = (short)Enums.TypeEnum.Debit,
+                Operation = (short)OperationEnum.WithDraw,
+                CreationDate = DateTime.Now,
             };
 
             transactionRepository.AddDeposit(deposit);
-            return "Deposito cadastrado com sucesso!";
+            return "Saque realizado com sucesso!";
 
         }
 
@@ -92,6 +119,9 @@ namespace bank_api.Services
                 IdAccount = c.IdAccount,
                 Value = c.Value,
                 Type = c.Type,
+                Operation = c.Operation,
+                CreationDate = c.CreationDate.ToShortDateString(),
+
             });
         }
 

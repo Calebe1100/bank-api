@@ -7,10 +7,11 @@ public interface IAccountRepository
     Account GetByNumber(string cpf);
     Account GetId(int idClient, long id);
     void Add(Account account);
-    void Update(Account accountDto);
+    Task UpdateAsync(Account account);
     void Delete(long idClient, long id);
     bool ExistsByNumber(string accountNumber);
     Account GetNumber(int idClient, string number);
+    Task<IEnumerable<Account>> GetFull();
 }
 
 public class AccountRepository : IAccountRepository
@@ -29,6 +30,12 @@ public class AccountRepository : IAccountRepository
                              .ToListAsync();
     }
 
+    public async Task<IEnumerable<Account>> GetFull()
+    {
+        return await _context.Accounts
+                             .ToListAsync();
+    }
+
     public Account GetByNumber(string number) => _context.Accounts.FirstOrDefault(c => c.Number == number);
 
     public void Add(Account account)
@@ -42,11 +49,19 @@ public class AccountRepository : IAccountRepository
         return _context.Accounts.FirstOrDefault(c => c.IdClient == idClient && c.Id == id);
     }
 
-    public void Update(Account account)
+    public async Task UpdateAsync(Account account)
     {
-        _context.Accounts.Update(account);
-        _context.SaveChanges();
+        var trackedEntity = await _context.Accounts
+                                          .FirstOrDefaultAsync(a => a.Id == account.Id && a.IdClient == account.IdClient);
+
+        if (trackedEntity != null)
+        {
+            _context.Entry(trackedEntity).CurrentValues.SetValues(account);
+            await _context.SaveChangesAsync();
+        }
+        // Se preferir, você pode lançar exceção aqui se não encontrar.
     }
+
 
     public void Delete(long idClient, long id)
     {

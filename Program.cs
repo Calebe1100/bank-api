@@ -2,6 +2,7 @@ using bank_api.Repositories;
 using bank_api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -25,7 +26,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("BankConnection"),
-        new MySqlServerVersion(new Version(8, 0, 36))));
+        new MySqlServerVersion(new Version(8, 0, 36)))
+    .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll)); // <-- Aqui
+
 
 // ============================
 // 3. Repositories & Services
@@ -37,6 +40,7 @@ builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<ClienteService>();
 builder.Services.AddTransient<AccountService>();
 builder.Services.AddTransient<TransactionService>();
+builder.Services.AddTransient<TransferService>();
 
 builder.Services.AddControllers();
 
@@ -93,6 +97,8 @@ builder.Services.AddSwaggerGen(c =>
         { jwtSecurityScheme, Array.Empty<string>() }
     });
 });
+
+
 
 // ============================
 // 6. Pipeline

@@ -1,8 +1,8 @@
 ﻿namespace bank_api.Enums
 {
-    public enum TransactionEnum
+    public enum TypeEnum
     {
-        WithDraw = 0,
-        Deposit = 1
+        Credit = 0,
+        Debit = 1,
     }
 }
